@@ -1,18 +1,17 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from .forms import SaOrderForm
 
-# Create your views here.
-def new_order(request):
-    form = SaOrderForm()
+def new_sa_order(request):
     if request.method == 'POST':
         form = SaOrderForm(request.POST)
         if form.is_valid():
             form.save()
-            # Redirect or show success message
-    
-    context = {
-        'form': form,
-    }
-    return render(request, 'sa_orders/order_form.html', context)
+            messages.success(request, "Congrats, the SA order has been registered!")
+            return redirect('sa_order_form')  # Redirect to the same form or another page
+    else:
+        form = SaOrderForm()
+
+    return render(request, 'sa_orders/order_form.html', {'form': form})
 
 

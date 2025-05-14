@@ -1,7 +1,6 @@
 from django import forms
 from .models import SaOrder
 
-# options for the company field
 COMPANY_CHOICES = [
     ('adendorff', 'Adendorff'),
     ('chemvulc', 'Chemvulc'),
@@ -12,9 +11,9 @@ COMPANY_CHOICES = [
 ]
 
 class SaOrderForm(forms.ModelForm):
-    company = forms.ChoiceField(
+    companies = forms.MultipleChoiceField(
         choices=COMPANY_CHOICES,
-        widget=forms.Select(attrs={'class': 'form-select'})
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'})
     )
 
     class Meta:
@@ -29,7 +28,6 @@ class SaOrderForm(forms.ModelForm):
         ]
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
-            'other_company': forms.TextInput(attrs={'class': 'form-control'}),
             'zar_amount': forms.NumberInput(attrs={'class': 'form-control'}),
             'my_zar_rate': forms.NumberInput(attrs={'class': 'form-control'}),
             'client_rate': forms.NumberInput(attrs={'class': 'form-control'}),

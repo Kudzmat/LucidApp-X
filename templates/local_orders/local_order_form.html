@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}SA Order Form{% endblock %}
+{% block title %}Local Order Form{% endblock %}
 
 {% block content %}
 <style>
@@ -21,36 +21,33 @@
   <div class="row justify-content-center">
     <div class="col-md-8">
       <div class="form-container">
-        <h2 class="text-center mb-4">SA Order Form</h2>
+        <h2 class="text-center mb-4">Local Order Form</h2>
+
+        <!-- Display success messages -->
+        {% if messages %}
+          <div>
+            {% for message in messages %}
+              <div class="alert alert-success" role="alert">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
         <form method="post" novalidate>
           {% csrf_token %}
-
           {% for field in form %}
             <div class="mb-3">
               {{ field.label_tag }}
-
-              {% if field.name == "companies" %}
-                <div class="form-check">
-                  {% for checkbox in field %}
-                    <div class="form-check">
-                      {{ checkbox.tag }} {{ checkbox.choice_label }}
-                    </div>
-                  {% endfor %}
-                </div>
-              {% else %}
-                {{ field }}
-              {% endif %}
-
+              {{ field }}
               {% if field.help_text %}
                 <div class="form-text">{{ field.help_text }}</div>
               {% endif %}
-
               {% for error in field.errors %}
                 <div class="text-danger small">{{ error }}</div>
               {% endfor %}
             </div>
           {% endfor %}
-
           <div class="text-center">
             <button type="submit" class="btn btn-primary">Submit</button>
           </div>
@@ -60,4 +57,3 @@
   </div>
 </div>
 {% endblock %}
-

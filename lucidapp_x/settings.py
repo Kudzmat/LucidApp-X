@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "lucidapp",
     "sa_orders",
+    "local_orders",
+    "lucid_bank"
 ]
 
 MIDDLEWARE = [
