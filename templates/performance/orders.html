@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load static %}
+{% block title %}
+View Orders
+{% endblock %}
+
+{% block content %}
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Orders</h1>
+
+        <!-- Month Selection -->
+        <form method="get" class="mb-4">
+            <label for="month" class="form-label">Select Month:</label>
+            <input type="month" id="month" name="month" class="form-control" value="{{ selected_month }}">
+            <button type="submit" class="btn btn-primary mt-2">Filter</button>
+        </form>
+
+        <!-- Local Orders -->
+        <h2 class="mt-4">Local Orders</h2>
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Profit</th>
+                    <th>Revenue (VAT)</th>
+                    <th>Order Delivered</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in local_orders %}
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.date }}</td>
+                        <td>${{ order.profit|intcomma }}</td>
+                        <td>${{ order.revenue_vat|intcomma }}</td>
+                        <td>{{ order.order_delivered }}</td>
+                        <td>
+                            <form method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="order_type" value="local">
+                                <input type="hidden" name="order_id" value="{{ order.id }}">
+                                <button type="submit" class="btn btn-sm {% if order.order_delivered %}btn-danger{% else %}btn-success{% endif %}">
+                                    {% if order.order_delivered %}Mark as Not Delivered{% else %}Mark as Delivered{% endif %}
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- SA Orders -->
+        <h2 class="mt-4">SA Orders</h2>
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Companies</th>
+                    <th>Profit</th>
+                    <th>Revenue (VAT)</th>
+                    <th>Order Delivered</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in sa_orders %}
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.date }}</td>
+                        <td>{{ order.companies }}</td>
+                        <td>${{ order.profit|intcomma  }}</td>
+                        <td>${{ order.revenue_vat|intcomma  }}</td>
+                        <td>{{ order.order_delivered }}</td>
+                        <td>
+                            <form method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="order_type" value="sa">
+                                <input type="hidden" name="order_id" value="{{ order.id }}">
+                                <button type="submit" class="btn btn-sm {% if order.order_delivered %}btn-danger{% else %}btn-success{% endif %}">
+                                    {% if order.order_delivered %}Mark as Not Delivered{% else %}Mark as Delivered{% endif %}
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

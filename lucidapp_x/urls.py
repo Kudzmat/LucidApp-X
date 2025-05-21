@@ -22,4 +22,5 @@ urlpatterns = [
     path("sa-orders/", include("sa_orders.urls")),
     path("local-orders/", include("local_orders.urls")),
     path("lucid-bank/", include("lucid_bank.urls")),
+    path("performance/", include("performance.urls"))
 ]

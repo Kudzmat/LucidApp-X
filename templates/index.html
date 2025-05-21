@@ -1,14 +1,70 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
 {% block title %}
 LucidApp | Dashboard
 {% endblock %}
 
 {% block content %}
-        <!-- Main content -->
-        <div class="col-md-9 col-lg-10 content">
-            <h2>Welcome to LucidApp</h2>
-            <p class="lead">Manage your orders, bank transactions, and business performance all in one place.</p>
+<div class="container mt-5">
+    <h1 class="text-center">Dashboard</h1>
+    <h2 class="text-center">{{ current_month }}</h2>
+
+    <div class="row mt-4">
+        <!-- Total Orders -->
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Total Orders</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ total_orders }}</h5>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Order Value -->
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header">Total Order Value</div>
+                <div class="card-body">
+                    <h5 class="card-title">${{ total_order_value|intcomma }}</h5>
+                    <p class="card-text">
+                        SA Orders Value: ${{ total_sa_orders|intcomma }}<br>
+                        Local Orders Value: ${{ total_local_orders|intcomma }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Not Delivered -->
+        <div class="col-md-4">
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-header">Orders Not Delivered</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ total_orders_not_delivered }}</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <!-- LucidBank Balance -->
+        <div class="col-md-6">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-header">LucidBank Balance</div>
+                <div class="card-body">
+                    <h5 class="card-title">${{ lucid_bank_balance|intcomma }}</h5>
+                </div>
+            </div>
+        </div>
+
+        <!-- Saman Balance -->
+        <div class="col-md-6">
+            <div class="card text-white bg-secondary mb-3">
+                <div class="card-header">Saman Balance</div>
+                <div class="card-body">
+                    <h5 class="card-title">${{ saman_balance|intcomma }}</h5>
+                </div>
+            </div>
         </div>
     </div>
 </div>

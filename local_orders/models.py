@@ -1,9 +1,10 @@
+from django.utils.timezone import now
 from decimal import Decimal
 from django.db import models
 
 # Create your models here.
 class LocalOrder(models.Model):
-    date = models.DateField(blank=False, null=False)
+    date = models.DateTimeField(default=now)
 
     amount = models.DecimalField(
         max_digits=10,
@@ -13,7 +14,7 @@ class LocalOrder(models.Model):
         help_text="The cost of the order in USD"
     )
 
-    # markup default is 17%
+    # markup default is 17.5%
     markup = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -57,6 +58,11 @@ class LocalOrder(models.Model):
     # the profit will be calculated using this method
     def get_profit(self):
         return self.revenue - self.amount
+    
+    order_delivered = models.BooleanField(
+        default=False,
+        help_text="Has the order been delivered?"
+    )
     
     # extra order notes
     notes = models.TextField(

@@ -1,8 +1,9 @@
+from django.utils.timezone import now
 from decimal import Decimal
 from django.db import models
 
 class SaOrder(models.Model):
-    date = models.DateField(blank=False, null=False)
+    date = models.DateTimeField(default=now)
 
     COMPANY_CHOICES = [
         ('adendorff', 'Adendorff'),
@@ -160,6 +161,11 @@ class SaOrder(models.Model):
     def get_profit(self):
         return self.revenue - self.internal_bank_deduction
     
+    order_delivered = models.BooleanField(
+        default=False,
+        help_text="Has the order been delivered?"
+    )
+    
     # extra order notes
     notes = models.TextField(
         blank=True,
@@ -182,7 +188,7 @@ class SaOrder(models.Model):
         super(SaOrder, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.date} - {self.zar_amount} ZAR"
+        return f"{self.date} - {self.companies} | {self.zar_amount} ZAR"
     class Meta:
         verbose_name = "SA Order"
         verbose_name_plural = "SA Orders"

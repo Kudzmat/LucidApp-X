@@ -21,21 +21,14 @@
           </div>
           
           <div class="mb-3">
-            {{ form.debit.label_tag }}
-            {{ form.debit }}
+            {{ form.amount.label_tag }}
+            {{ form.amount }}
           </div>
 
-          {% if form.bank %}
+          {% if form.withdraw_from %}
           <div class="mb-3">
-            {{ form.bank.label_tag }}
-            {{ form.bank }}
-          </div>
-          {% endif %}
-
-          {% if form.source %}
-          <div class="mb-3">
-            {{ form.source.label_tag }}
-            {{ form.source }}
+            {{ form.withdraw_from.label_tag }}
+            {{ form.withdraw_from}}
           </div>
           {% endif %}
 

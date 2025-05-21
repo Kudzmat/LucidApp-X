@@ -60,18 +60,17 @@
                 Bank
             </a>
             <div class="collapse submenu" id="bankMenu">
-                <a href="#">Make Payment</a>
+                <a href="{% url 'lucid_bank:make_payment' %}">Make Payment</a>
                 <a href="{% url 'lucid_bank:bank_withdrawal' %}">Withdraw Cash</a>
-                <a href="#">Transfer Cash</a>
-                <a href="#">View Statements</a>
+                <a href="{% url 'lucid_bank:make_transfer' %}">Transfer Cash</a>
+                <a href="{% url 'lucid_bank:view_statement' %}">View Statements</a>
             </div>
 
             <a data-bs-toggle="collapse" href="#performanceMenu" role="button" aria-expanded="false">
                 Performance
             </a>
             <div class="collapse submenu" id="performanceMenu">
-                <a href="#">Past Orders</a>
-                <a href="#">Pending Orders</a>
+                <a href="{% url 'performance:view_orders' %}">Past Orders</a>
                 <a href="#">Charts</a>
             </div>
         </div>

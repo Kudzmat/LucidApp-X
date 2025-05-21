@@ -3,3 +3,4 @@ from .models import *
 
 admin.site.register(LucidBank)
 admin.site.register(Saman)
+admin.site.register(AccountBalance)
