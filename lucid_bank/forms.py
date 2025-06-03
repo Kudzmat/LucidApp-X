@@ -31,3 +31,10 @@ class TransferForm(forms.Form):
     pay_from = forms.ChoiceField(choices=BANK_CHOICES, widget=forms.Select(attrs={'class': 'form-control', 'placeholder': 'Select bank to pay from'}))
     notes = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 2, 'placeholder': 'Optional notes'}))
 
+class BalancePaymentForm(forms.Form):
+    date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    transaction = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Payment for order, supplier...'}))
+    amount = forms.DecimalField(widget=forms.NumberInput(attrs={'placeholder': 'Amount Paid'}))
+    pay_to = forms.ChoiceField(choices=BANK_CHOICES, widget=forms.Select(attrs={'class': 'form-control', 'placeholder': 'Select bank to pay to'}))
+    notes = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 2, 'placeholder': 'Optional notes'}))
+

@@ -1,0 +1,61 @@
+<!-- filepath: /Users/kudzayibamhare/Desktop/lucid/lucidapp_x/templates/performance/yearly_performance.html -->
+{% extends 'base.html' %}
+{% load static %}
+<script src="{% static 'path/to/chart.min.js' %}"></script>
+{% block title %}
+Yearly Performance
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Yearly Performance</h1>
+
+    <!-- Year Selection -->
+    <form method="get" class="mb-4">
+        <label for="year" class="form-label">Select Year:</label>
+        <input type="number" id="year" name="year" class="form-control" value="{{ selected_year }}">
+        <button type="submit" class="btn btn-primary mt-3">Generate Chart</button>
+    </form>
+
+    <!-- Chart -->
+    <div class="mt-5">
+        <canvas id="performanceChart"></canvas>
+    </div>
+</div>
+
+<script>
+    // Chart.js Configuration
+    const ctx = document.getElementById('performanceChart').getContext('2d');
+    const performanceChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ labels|safe }},
+            datasets: [{
+                label: 'Revenue $USD',
+                data: {{ chart_data|safe }},
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Month'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Revenue $USD'
+                    },
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

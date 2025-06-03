@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+<script src="{% static 'path/to/chart.min.js' %}"></script>
+{% block title %}
+Monthly Performance
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Monthly Performance</h1>
+
+    <!-- Month Selection -->
+    <form method="get" class="mb-4">
+        <label for="month" class="form-label">Select Month:</label>
+        <input type="month" id="month" name="month" class="form-control" value="{{ selected_month }}">
+        <button type="submit" class="btn btn-primary mt-3">Generate Chart</button>
+    </form>
+
+    <!-- Chart -->
+    <div class="mt-5">
+        <canvas id="performanceChart"></canvas>
+    </div>
+</div>
+
+<script>
+    // Chart.js Configuration
+    const ctx = document.getElementById('performanceChart').getContext('2d');
+    const performanceChart = new Chart(ctx, {
+        type: 'bar', // Bar chart
+        data: {
+            labels: {{ labels|safe }}, // X-axis labels (days of the month)
+            datasets: [{
+                label: 'Revenue $USD', // Y-axis label
+                data: {{ chart_data|safe }}, // Y-axis data (revenue for each day)
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Day of Month'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Revenue $USD'
+                    },
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

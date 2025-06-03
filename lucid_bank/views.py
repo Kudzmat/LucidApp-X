@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from django.contrib import messages
-from .models import Saman, LucidBank
+from .models import Saman, LucidBank, AccountBalance
 from .forms import *
 
 
@@ -11,6 +11,16 @@ def get_current_balance(bank):
         last_entry = Saman.objects.order_by('-date').first()
     else:
         last_entry = 0
+
+    if last_entry:
+        current_balance = last_entry.balance
+    else:
+        current_balance = 0  # Default value if no entries exist
+
+    return current_balance
+
+def get_owed_balance():
+    last_entry = AccountBalance.objects.order_by('-date').first()
 
     if last_entry:
         current_balance = last_entry.balance
@@ -32,7 +42,6 @@ def withdrawal(request):
                 # get current balance from database
                 # Get the most recent entry based on the 'date' field
                 current_balance = get_current_balance('lucidity')
-                print(current_balance)
 
                 # get the data from the form
                 date = form.cleaned_data['date']
@@ -48,7 +57,7 @@ def withdrawal(request):
                 # create a new LucidBank instance
                 lucid_bank = LucidBank.objects.create(
                     date=date,
-                    transaction=transaction,
+                    transaction=transaction,        
                     debit=debit,
                     credit=credit,
                     balance=balance,
@@ -289,3 +298,103 @@ def view_statement(request):
         'bank_name': bank_name,
     }
     return render(request, 'lucid_bank/view_statement.html', context)
+
+def balance_payment(request):
+    # show user current balance owed by client
+    current_owed_balance = get_owed_balance()
+    form = BalancePaymentForm()
+    if request.method == 'POST':
+        form = BalancePaymentForm(request.POST)
+        if form.is_valid():
+            print(f"paying to {form.cleaned_data['pay_to']}")
+            # if user is paying to lucid bank
+            if form.cleaned_data['pay_to'] == 'lucidity':
+                # get current balance from database
+                # Get the most recent entry based on the 'date' field
+                current_balance = get_current_balance('lucidity')
+
+                # get the data from the form
+                date = form.cleaned_data['date']
+                bank = form.cleaned_data['pay_to']
+                transaction = form.cleaned_data['transaction']
+                amount = form.cleaned_data['amount']
+                notes = form.cleaned_data['notes']
+
+                # calculate the balance
+                balance = current_balance + amount
+                
+                # create a new LucidBank instance
+                lucid_bank = LucidBank.objects.create(
+                    date=date,
+                    transaction=transaction,
+                    debit=0,
+                    credit=amount,
+                    balance=balance,
+                    notes=notes
+                )
+                lucid_bank.save()
+
+                # subtract the amount from the balance owed by client
+                # get latest account balance owed
+                new_balance = current_owed_balance - amount
+                # create new AccountBalance instance
+                owed_balance_instance = AccountBalance.objects.create(
+                    date=date,
+                    transaction=transaction,
+                    debit=amount,
+                    credit=0,
+                    balance=new_balance,
+                )
+                owed_balance_instance.save()
+                
+                messages.success(request, f"Congrats, the ${amount} payment to {bank} bank has been registered!")
+                return redirect('lucid_bank:balance_payment')
+            
+            # if user is paying to Saman
+            elif form.cleaned_data['pay_to'] == 'saman':
+                # get current balance from database
+                # Get the most recent entry based on the 'date' field
+                current_balance = get_current_balance('saman')
+
+                # get the data from the form
+                date = form.cleaned_data['date']
+                bank = form.cleaned_data['pay_to']
+                transaction = form.cleaned_data['transaction']
+                amount = form.cleaned_data['amount']
+                notes = form.cleaned_data['notes']
+
+                # calculate the balance
+                balance = current_balance + amount
+
+                # create a new Saman instance
+                saman = Saman.objects.create(
+                    date=date,
+                    transaction=transaction,
+                    debit=0,
+                    credit=amount,
+                    balance=balance,
+                    notes=notes
+                )
+                saman.save()
+
+                # subtract the amount from the balance owed by client
+                # get latest account balance owed
+                new_balance = current_owed_balance - amount
+                # create new AccountBalance instance
+                owed_balance_instance = AccountBalance.objects.create(
+                    date=date,
+                    transaction=transaction,
+                    debit=amount,
+                    credit=0,
+                    balance=new_balance,
+                )
+                owed_balance_instance.save()
+
+                messages.success(request, f"Congrats, the amount has been deducted from owed balances!")
+                return redirect('lucid_bank:balance_payment')
+            else:
+                form = BalancePaymentForm()
+
+    context = {'form': form, 'current_owed_balance': current_owed_balance}
+
+    return render(request, 'lucid_bank/balance_payment.html',context=context)

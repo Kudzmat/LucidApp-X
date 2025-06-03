@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}
+Bank Statement
+{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
@@ -27,9 +32,9 @@
                 <tr>
                     <td>{{ transaction.date }}</td>
                     <td>{{ transaction.transaction }}</td>
-                    <td>{{ transaction.debit }}</td>
-                    <td>{{ transaction.credit }}</td>
-                    <td>{{ transaction.balance }}</td>
+                    <td>${{ transaction.debit|intcomma }}</td>
+                    <td>${{ transaction.credit|intcomma }}</td>
+                    <td>${{ transaction.balance|intcomma }}</td>
                     <td>{{ transaction.notes|default:"N/A" }}</td>
                 </tr>
             {% empty %}

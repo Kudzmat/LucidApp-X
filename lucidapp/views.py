@@ -7,9 +7,6 @@ from lucid_bank.models import LucidBank, Saman
 
 # Dashboard view
 def home(request):
-    # Get the current month
-    current_month = now().strftime('%B %Y')
-
     # Total orders
     total_sa_orders = SaOrder.objects.count()
     total_local_orders = LocalOrder.objects.count()
@@ -30,7 +27,6 @@ def home(request):
     total_orders_not_delivered = sa_orders_not_delivered + local_orders_not_delivered
 
     context = {
-        'current_month': current_month,
         'total_orders': total_orders,
         'total_sa_orders': round(total_sa_value, 2),
         'total_local_orders': round(total_local_value, 2),
